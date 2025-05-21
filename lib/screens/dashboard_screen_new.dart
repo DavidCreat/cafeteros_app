@@ -3,13 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../widgets/glass_bottom_nav.dart';
 import '../widgets/adaptive_layout.dart';
+import '../widgets/gesture_detector_feedback.dart';
 import '../utils/responsive_utils.dart';
 import '../app.dart';
 import '../repositories/data_repository.dart';
-import '../services/connectivity_service.dart';
 import 'lot_register_screen.dart';
-import 'inventory_register_screen.dart';
-import 'inventory_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -92,10 +90,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.coffee,
-        foregroundColor: Colors.white,
-        onPressed: () async {
+      floatingActionButton: GestureDetectorFeedback(
+        child: FloatingActionButton.extended(
+          backgroundColor: AppColors.liver,
+          icon: const Icon(Icons.add),
+          label: Text(
+            'Registrar nuevo lote',
+            style: TextStyle(
+              fontSize: ResponsiveUtils.adaptiveFontSize(context, 14),
+            ),
+          ),
+          onPressed: null, // Se maneja en el GestureDetectorFeedback
+        ),
+        onTap: () async {
           // Navigate to lot register screen
           HapticFeedback.mediumImpact();
           await Navigator.push(
@@ -105,10 +112,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // Reload data when returning from register screen
           _loadLotes();
         },
-        child: const Text(
-          '+',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
       ),
       body: SafeArea(
         child: AdaptiveScrollView(
@@ -140,30 +143,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
                 const Spacer(),
-                // Indicador de conexión en tiempo real
-                StreamBuilder<bool>(
-                  stream: ConnectivityService().connectivityStream,
-                  initialData: ConnectivityService().isConnected,
-                  builder: (context, snapshot) {
-                    final isConnected = snapshot.data ?? false;
-                    return Row(
-                      children: [
-                        Icon(
-                          isConnected ? Icons.wifi : Icons.wifi_off,
-                          color: isConnected ? Colors.green : Colors.red,
-                          size: 18,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          isConnected ? 'Con conexión' : 'Sin conexión',
-                          style: TextStyle(
-                            color: isConnected ? Colors.green : Colors.red,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+                // Indicador de conexión
+                Row(
+                  children: const [
+                    Icon(Icons.wifi_off, color: Colors.red, size: 18),
+                    SizedBox(width: 4),
+                    Text('Sin conexión', style: TextStyle(color: Colors.red, fontSize: 12)),
+                  ],
                 ),
               ],
             ),
@@ -177,7 +163,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   _SummaryCard(
                     icon: Icons.inventory_2,
-                    label: 'Inv.',
+                    label: 'Inventario',
                     value: '${_totalInventario.toStringAsFixed(1)} kg',
                     color: Color(0xFF795548),
                   ),
@@ -199,9 +185,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: 28),
             // Gráfica circular de variedades
             const Text('Distribución por variedad', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            const SizedBox(height: 8), // Espacio adicional entre el título y el gráfico
             SizedBox(
-              height: 80, // Reducido de 100 a 80
+              height: 180,
               child: _lotes.isEmpty
                 ? Center(child: Text('No hay datos disponibles', style: TextStyle(color: Colors.grey)))
                 : PieChart(
@@ -211,9 +196,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           value: double.parse(lote['cantidad']!),
                           color: _getColorByEstado(lote['estado']!),
                           title: lote['variedad'],
-                          titleStyle: TextStyle(fontSize: 6, fontWeight: FontWeight.bold, color: Colors.white),
-                          radius: 30, // Reducido de 35 a 30
-                          titlePositionPercentageOffset: 0.7,
+                          titleStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                          radius: 80,
+                          titlePositionPercentageOffset: 0.55,
                         );
                       }).toList(),
                     sectionsSpace: 2,
@@ -289,32 +274,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
               childAspectRatio: 1.4,
-              children: [
+              children: const [
                 _DashboardTile(
-                  icon: Icons.inventory,
+                  icon: Icons.inventory_2,
                   label: 'Inventario',
                   description: 'Controla tu inventario de café',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const InventoryRegisterScreen(),
-                      ),
-                    ).then((_) => _loadLotes());
-                  },
                 ),
                 _DashboardTile(
                   icon: Icons.grass,
                   label: 'Lotes',
-                  description: 'Gestiona tus lotes',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const InventoryScreen(),
-                      ),
-                    ).then((_) => _loadLotes());
-                  },
+                  description: 'Gestiona tus lotes registrados',
                 ),
                 _DashboardTile(
                   icon: Icons.bar_chart,
@@ -349,62 +318,45 @@ class _DashboardTile extends StatelessWidget {
   final IconData icon;
   final String label;
   final String description;
-  final VoidCallback? onTap;
 
   const _DashboardTile({
     required this.icon,
     required this.label,
     required this.description,
-    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(8),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(8),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: AppColors.coffee, size: 28),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              description,
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
             ),
           ],
-        ),
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(icon, color: AppColors.coffee, size: 24),
-                  const SizedBox(height: 6),
-                  Text(
-                    label,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    description,
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-          ),
         ),
       ),
     );
@@ -413,23 +365,23 @@ class _DashboardTile extends StatelessWidget {
 
 // Widget para las tarjetas de resumen
 class _SummaryCard extends StatelessWidget {
+  final IconData icon;
   final String label;
   final String value;
-  final IconData icon;
   final Color color;
 
   const _SummaryCard({
+    required this.icon,
     required this.label,
     required this.value,
-    required this.icon,
     required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 95,
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      width: 100,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -444,19 +396,16 @@ class _SummaryCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(height: 4),
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(color: Colors.grey, fontSize: 10),
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
           ),
         ],
       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/onboarding_page.dart';
 
+import '../app.dart';
+
 class OnboardingScreen extends StatefulWidget {
   final VoidCallback onFinish;
   const OnboardingScreen({super.key, required this.onFinish});
@@ -42,21 +44,37 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F3EE),
-      body: PageView.builder(
-        controller: _controller,
-        itemCount: _pages.length,
-        onPageChanged: (idx) => setState(() => _pageIndex = idx),
-        itemBuilder: (context, idx) {
-          final page = _pages[idx];
-          return OnboardingPage(
-            title: page['title']!,
-            subtitle: page['subtitle']!,
-            imageAsset: page['image']!,
-            onNext: _nextPage,
-            isLast: idx == _pages.length - 1,
-          );
-        },
+      backgroundColor: AppColors.lightBackground,
+      body: Column(
+        children: [
+          Expanded(
+            child: PageView.builder(
+              controller: _controller,
+              itemCount: _pages.length,
+              onPageChanged: (idx) => setState(() => _pageIndex = idx),
+              itemBuilder: (context, idx) {
+                final page = _pages[idx];
+                return OnboardingPage(
+                  title: page['title']!,
+                  description: page['subtitle']!,
+                  icon: Icons.image,
+                  onNext: _nextPage,
+                  isLast: idx == _pages.length - 1,
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: _nextPage,
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
+              child: Text(_pageIndex == _pages.length - 1 ? 'Comenzar' : 'Siguiente'),
+            ),
+          ),
+        ],
       ),
     );
   }

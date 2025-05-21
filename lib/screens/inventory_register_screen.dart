@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import '../repositories/data_repository.dart';
 import '../app.dart';
+import '../repositories/data_repository.dart';
 
-class LotRegisterScreen extends StatefulWidget {
-  const LotRegisterScreen({super.key});
+class InventoryRegisterScreen extends StatefulWidget {
+  const InventoryRegisterScreen({super.key});
 
   @override
-  State<LotRegisterScreen> createState() => _LotRegisterScreenState();
+  State<InventoryRegisterScreen> createState() => _InventoryRegisterScreenState();
 }
 
-class _LotRegisterScreenState extends State<LotRegisterScreen> {
+class _InventoryRegisterScreenState extends State<InventoryRegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final DataRepository _repository = DataRepository();
   String? variedad;
@@ -21,7 +21,7 @@ class _LotRegisterScreenState extends State<LotRegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registrar Lote'),
+        title: const Text('Registrar Inventario'),
         backgroundColor: AppColors.liver,
         foregroundColor: Colors.white,
       ),
@@ -36,7 +36,7 @@ class _LotRegisterScreenState extends State<LotRegisterScreen> {
                 children: [
                   // Título descriptivo
                   const Text(
-                    'Información del Lote',
+                    'Información del Inventario',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 24),
@@ -86,7 +86,7 @@ class _LotRegisterScreenState extends State<LotRegisterScreen> {
                       prefixIcon: const Icon(Icons.scale, color: AppColors.coffee),
                       suffixText: 'kg',
                     ),
-                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     onChanged: (value) => cantidad = value,
                     validator: (value) {
                       if (value == null || value.isEmpty) return 'Ingresa la cantidad';
@@ -147,7 +147,7 @@ class _LotRegisterScreenState extends State<LotRegisterScreen> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     icon: const Icon(Icons.save),
-                    label: const Text('GUARDAR LOTE', style: TextStyle(fontSize: 16)),
+                    label: const Text('GUARDAR INVENTARIO', style: TextStyle(fontSize: 16)),
                     onPressed: () {
                       if (_formKey.currentState!.validate() && fecha != null) {
                         // First navigate back, then save the data
