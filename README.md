@@ -313,49 +313,22 @@ sequenceDiagram
 - Interfaz de usuario completa y responsive
 - Listo para pruebas con usuarios y retroalimentación
 
-### Roadmap 2025-2026
+---
+
+### Estado Actual (Febrero 2025)
 
 ```mermaid
 gantt
     title Roadmap de Desarrollo
     dateFormat  YYYY-MM-DD
     section 2025-Q1
-    v1.1.0 - Integración Firebase           :2025-01-01, 60d
-    Autenticación de usuarios               :2025-02-01, 30d
-    section 2025-Q2
-    v1.2.0 - Sincronización en la nube      :2025-04-01, 45d
-    Reportes automáticos                    :2025-05-15, 30d
-    section 2025-Q3
-    v1.3.0 - Notificaciones inteligentes    :2025-07-01, 45d
-    Mejoras en visualización                :2025-08-15, 30d
-    section 2025-Q4
-    v1.4.0 - Exportación de datos           :2025-10-01, 30d
-    Integración con APIs externas           :2025-11-01, 60d
-    section 2026-Q1
-    v2.0.0 - Integración IoT                :2026-01-01, 90d
-    section 2026-Q2
-    v2.1.0 - Marketplace                    :2026-04-01, 90d
+    v1.0.0 - Inicio del Proyecto           :2025-02-27, 1d
 ```
 
-#### Corto Plazo (v1.1.0 - Q1 2025)
-- Integración con base de datos Firebase
-- Sistema de autenticación de usuarios
-- Sincronización en la nube cuando hay conectividad
-- Soporte para múltiples idiomas
-
-#### Mediano Plazo (v1.2.0-v1.4.0 - Q2-Q4 2025)
-- Reportes automáticos y exportación de datos
-- Notificaciones y alertas inteligentes
-- Mejoras en la visualización de datos
-- Integración con APIs climáticas y de precios del café
-- Implementación de análisis predictivo básico
-
-#### Largo Plazo (v2.0.0+ - 2026)
-- Integración con sensores IoT para monitoreo de cultivos
-- Marketplace para conectar productores y compradores
-- Analítica predictiva para estimación de cosechas
-- Certificación blockchain para trazabilidad
-- Expansión a otras regiones cafeteras
+#### Estado Actual (v1.0.0 - 27 de Febrero 2025)
+- MVP funcional con dashboard visual y gestión de inventario
+- Almacenamiento local implementado con Hive
+- Interfaz de usuario completa y responsive
 
 ---
 
@@ -431,7 +404,7 @@ Este proyecto está bajo la Licencia MIT. Consulta el archivo LICENSE para más 
 
 - **David Alexander Fonseca Perez**
 - GitHub: [@DavidCreat](https://github.com/DavidCreat)
-- Email: [correo@ejemplo.com](mailto:correo@ejemplo.com)
+- Email: [david.fonseca12p@gmail.com](mailto:david.fonseca12p@gmail.com)
 
 ---
 
