@@ -15,7 +15,7 @@
 **Autor:** DAVID ALEXANDER FONSECA PEREZ  
 **Proyecto académico - Universidad**
 
-[Ver Demo](#) • [Reportar Bug](https://github.com/DavidCreat/cafeteros_app/issues) • [Solicitar Función](https://github.com/DavidCreat/cafeteros_app/issues)
+[Ver Demo](app-release.apk) • [Reportar Bug](https://github.com/DavidCreat/cafeteros_app/issues) • [Solicitar Función](https://github.com/DavidCreat/cafeteros_app/issues)
 
 </div>
 
